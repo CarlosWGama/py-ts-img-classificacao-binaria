@@ -7,6 +7,7 @@ from tensorflow import keras
 import requests
 import base64
 import io
+model = keras.models.load_model('modelo-treinado')
 
 def select_image(filename):
     # load image from file
@@ -37,11 +38,10 @@ def analyse():
     image = np.array(list(image)) / 255.0  ## convertendo de lista para array
 
     #### Recupera o modelo treinado
-    model = keras.models.load_model('modelo-treinado')
-    results = model.predict(np.array([image]))
-    result = results[0]
+    results = model(np.array([image]))
+    result = results[0].numpy() 
     print(result)
-    response = {"value":0, "acc":0, "animal": ""}
+    response = {"value":0, "acc":0, "value_name": ""}
     if (result[0] > result[1]):
         response["value"] = "0"
         response["value_name"] = "elefante"
